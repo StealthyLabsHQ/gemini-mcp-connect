@@ -23,7 +23,7 @@ Before modifying any file, Claude automatically submits its plan or code to Gemi
 ### 1. Clone or copy the files
 
 ```bash
-git clone https://github.com/youruser/gemini-bridge
+git clone https://github.com/StealthyLabsHQ/gemini-bridge
 cd gemini-bridge
 ```
 
