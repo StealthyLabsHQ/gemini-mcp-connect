@@ -1,0 +1,11 @@
+{
+  "$schema": "https://claude.ai/schema/mcp.json",
+  "_note": "This file registers gemini-mcp-connect as a project-scoped MCP server. For user-scoped (all projects), use install.sh / install.ps1 which runs: claude mcp add --scope user",
+  "mcpServers": {
+    "gemini-mcp-connect": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["./gemini_bridge_mcp.py"]
+    }
+  }
+}

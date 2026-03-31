@@ -1,6 +1,30 @@
-# Gemini Bridge (gemini-mcp-connect)
+# Gemini Bridge
 
-A lightweight CLI bridge that connects **Claude Code** to **Google Gemini** models, enabling Claude to use Gemini as a second brain for code review, reasoning validation, and critical analysis before applying any changes.
+A Claude Code plugin that connects **Claude** to **Google Gemini** models, enabling dual-AI code review, reasoning validation, and critical analysis before applying any changes.
+
+---
+
+## Plugin Structure
+
+```
+gemini-bridge/
+├── .claude-plugin/
+│   └── plugin.json          # Plugin metadata & install manifest
+├── commands/                # Slash commands
+│   ├── gemini.md            # /gemini — query Gemini directly
+│   └── gemini-status.md     # /gemini-status — check daily quota
+├── agents/
+│   └── gemini-reviewer.md   # Specialized dual-AI review agent
+├── skills/                  # Focused task skills
+│   ├── review-code.md       # /review-code — critical code review
+│   └── validate-plan.md     # /validate-plan — plan validation
+├── hooks/
+│   ├── pre-edit-review.sh   # Pre-edit hook script
+│   └── settings-snippet.json# Hook registration snippet
+├── .mcp.json                # MCP config (placeholder)
+├── gemini_bridge.py         # Core CLI script
+└── README.md
+```
 
 ---
 
@@ -20,24 +44,61 @@ Before modifying any file, Claude automatically submits its plan or code to Gemi
 
 ## Installation
 
-### 1. Clone or copy the files
+### Quick install (recommended)
 
+**macOS / Linux:**
 ```bash
-git clone https://github.com/StealthyLabsHQ/gemini-bridge
+git clone https://github.com/StealthyLabsHQ/gemini-mcp-connect
 cd gemini-bridge
+bash install.sh
 ```
 
-Or simply copy `gemini_bridge.py` into your project or into the global Claude plugins folder:
-
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/StealthyLabsHQ/gemini-mcp-connect
+cd gemini-bridge
+.\install.ps1
 ```
-C:/Users/<you>/.claude/plugins/gemini_bridge.py
-```
 
-### 2. Install dependencies
+The installer will:
+1. Check Python 3.10+
+2. Install `google-genai` and `python-dotenv`
+3. Copy `gemini_bridge.py` to `~/.claude/plugins/`
+4. Ask for your Gemini API key and save it to `~/.claude/plugins/.env`
+5. Install slash commands to `~/.claude/commands/`
+6. Add the workflow instructions to `~/.claude/CLAUDE.md`
+7. Run a connection test
+
+Get your free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
+
+---
+
+### Manual install
+
+<details>
+<summary>Click to expand manual steps</summary>
 
 ```bash
+# 1. Install dependencies
 pip install google-genai python-dotenv
+
+# 2. Copy core script
+cp gemini_bridge.py ~/.claude/plugins/gemini_bridge.py
+
+# 3. Set your API key
+cp .env.example ~/.claude/plugins/.env
+# then edit ~/.claude/plugins/.env and set GEMINI_API_KEY
+
+# 4. Install slash commands
+cp commands/gemini.md        ~/.claude/commands/gemini.md
+cp commands/gemini-status.md ~/.claude/commands/gemini-status.md
+cp skills/review-code.md     ~/.claude/commands/review-code.md
+cp skills/validate-plan.md   ~/.claude/commands/validate-plan.md
+
+# 5. Add workflow to CLAUDE.md (see CLAUDE.md section in Usage below)
 ```
+
+</details>
 
 ### 3. Set your API key and configure settings
 

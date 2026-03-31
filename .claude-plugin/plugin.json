@@ -1,0 +1,41 @@
+{
+  "name": "gemini-bridge",
+  "version": "1.0.0",
+  "description": "Dual-AI code review: Claude + Gemini. Automatically validates plans and code before applying changes.",
+  "author": "stealthy",
+  "license": "MIT",
+  "entry": "gemini_bridge.py",
+  "requires": {
+    "python": ">=3.10",
+    "packages": ["google-genai", "python-dotenv"]
+  },
+  "install": {
+    "commands": [
+      {
+        "src": "commands/gemini.md",
+        "dest": "~/.claude/commands/gemini.md"
+      },
+      {
+        "src": "commands/gemini-status.md",
+        "dest": "~/.claude/commands/gemini-status.md"
+      }
+    ],
+    "skills": [
+      {
+        "src": "skills/review-code.md",
+        "dest": "~/.claude/commands/review-code.md"
+      },
+      {
+        "src": "skills/validate-plan.md",
+        "dest": "~/.claude/commands/validate-plan.md"
+      }
+    ],
+    "script": "gemini_bridge.py",
+    "script_dest": "~/.claude/plugins/gemini_bridge.py",
+    "env": ".env",
+    "env_dest": "~/.claude/plugins/.env"
+  },
+  "hooks": {
+    "description": "See hooks/README.md for manual registration in .claude/settings.json"
+  }
+}

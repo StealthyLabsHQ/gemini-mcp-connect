@@ -1,0 +1,17 @@
+{
+  "_comment": "Add the contents of 'hooks' key below to your .claude/settings.json to enable Gemini pre-edit review.",
+  "_path": "~/.claude/settings.json or <project>/.claude/settings.json",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/stealthy/.claude/plugins/hooks/pre-edit-review.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
