@@ -1,4 +1,4 @@
-# Gemini Bridge
+# Gemini Bridge (gemini-mcp-connect)
 
 A lightweight CLI bridge that connects **Claude Code** to **Google Gemini** models, enabling Claude to use Gemini as a second brain for code review, reasoning validation, and critical analysis before applying any changes.
 
