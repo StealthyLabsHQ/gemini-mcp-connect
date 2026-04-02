@@ -116,7 +116,8 @@ def _call_gemini(prompt: str, tier: str) -> str:
     if not api_key:
         return (
             "Error: GEMINI_API_KEY is not set. "
-            f"Edit {BASE_DIR / '.env'} and add: GEMINI_API_KEY=your_key_here"
+            "Run /gemini:activate YOUR_KEY to activate, "
+            "or get a free key at https://aistudio.google.com/apikey"
         )
 
     try:
@@ -173,6 +174,24 @@ def _call_gemini(prompt: str, tier: str) -> str:
         return response.text
     except Exception as e:
         return f"Error [{model}]: {e}"
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _update_env_key(key_name: str, key_value: str) -> None:
+    """Update or add a key in the .env file, preserving all other lines."""
+    env_path = BASE_DIR / ".env"
+    lines = []
+    found = False
+    if env_path.exists():
+        lines = env_path.read_text().splitlines()
+        for i, line in enumerate(lines):
+            if line.strip().startswith(f"{key_name}="):
+                lines[i] = f"{key_name}={key_value}"
+                found = True
+                break
+    if not found:
+        lines.append(f"{key_name}={key_value}")
+    env_path.write_text("\n".join(lines) + "\n")
 
 # ── MCP Tools ─────────────────────────────────────────────────────────────────
 
@@ -273,8 +292,66 @@ def gemini_status() -> str:
         if tier not in RATE_LIMITS:
             lines.append(f"  {tier:6s} : unlimited")
 
-    lines.append(f"\nAPI key configured: {'yes' if os.environ.get('GEMINI_API_KEY') else 'NO — set GEMINI_API_KEY in ' + str(BASE_DIR / '.env')}")
+    if os.environ.get("GEMINI_API_KEY"):
+        lines.append("\nAPI key configured: yes")
+    else:
+        lines.append("\nAPI key configured: NO — run /gemini:activate YOUR_KEY to activate")
     return "\n".join(lines)
+
+
+@mcp.tool()
+def activate_gemini(api_key: str) -> str:
+    """
+    Activate Gemini by providing your API key. The key takes effect immediately
+    (no restart needed) and is saved to .env for future sessions.
+
+    Get a free key at https://aistudio.google.com/apikey
+
+    Args:
+        api_key: Your Gemini API key (starts with 'AI', ~39 characters).
+    """
+    api_key = api_key.strip()
+
+    # Basic format validation
+    if not api_key.startswith("AI") or len(api_key) < 30:
+        return (
+            "Error: That doesn't look like a valid Gemini API key. "
+            "Keys start with 'AI' and are ~39 characters long. "
+            "Get one free at https://aistudio.google.com/apikey"
+        )
+
+    # Set immediately in the running process
+    os.environ["GEMINI_API_KEY"] = api_key
+
+    # Persist to .env
+    try:
+        _update_env_key("GEMINI_API_KEY", api_key)
+    except OSError as e:
+        return f"Key activated for this session, but could not save to .env: {e}"
+
+    # Quick verification call with the cheapest model
+    try:
+        from google import genai
+        from google.genai import types as genai_types
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_content(
+            model=TIERS["lite"],
+            contents="Reply with exactly: OK",
+            config=genai_types.GenerateContentConfig(max_output_tokens=8),
+        )
+        if response.text:
+            return (
+                f"Gemini activated successfully! Key saved to {BASE_DIR / '.env'}.\n"
+                "All tools are now ready: /gemini:lite, /gemini:flash, /gemini:pro, /gemini:review, /gemini:validate"
+            )
+    except Exception as e:
+        return (
+            f"Key saved to {BASE_DIR / '.env'} but verification failed: {e}\n"
+            "The key may be invalid or there may be a network issue. "
+            "Try /gemini:status to check."
+        )
+
+    return f"Gemini activated. Key saved to {BASE_DIR / '.env'}."
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

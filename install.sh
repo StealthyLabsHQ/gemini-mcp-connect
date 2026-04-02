@@ -76,7 +76,7 @@ else
     # Use /dev/tty so this works even when piped via curl
     read -r -s API_KEY < /dev/tty
     if [ -z "$API_KEY" ]; then
-        warn "No API key entered. Edit $ENV_DEST manually and set GEMINI_API_KEY."
+        warn "No API key entered. You can activate later with /gemini:activate YOUR_KEY in Claude Code."
         echo "GEMINI_API_KEY=your_key_here" > "$ENV_DEST"
     else
         echo "GEMINI_API_KEY=$API_KEY" > "$ENV_DEST"
@@ -85,7 +85,7 @@ else
 fi
 
 # ── 6. Install slash commands ─────────────────────────────────────────────────
-GEMINI_COMMANDS=(lite flash pro status review validate)
+GEMINI_COMMANDS=(lite flash pro status review validate activate)
 
 if $REMOTE; then
     for CMD in "${GEMINI_COMMANDS[@]}"; do

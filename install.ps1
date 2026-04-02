@@ -73,13 +73,13 @@ if (Test-Path $EnvDest) {
         Set-Content -Path $EnvDest -Value "GEMINI_API_KEY=$ApiKeyPlain"
         Ok "API key saved to $EnvDest"
     } else {
-        Warn "No API key entered. Edit $EnvDest manually and set GEMINI_API_KEY."
+        Warn "No API key entered. You can activate later with /gemini:activate YOUR_KEY in Claude Code."
         Set-Content -Path $EnvDest -Value "GEMINI_API_KEY=your_key_here"
     }
 }
 
 # ── 6. Install slash commands ─────────────────────────────────────────────────
-$GeminiCommands = @("lite", "flash", "pro", "status", "review", "validate")
+$GeminiCommands = @("lite", "flash", "pro", "status", "review", "validate", "activate")
 
 if ($Remote) {
     foreach ($Cmd in $GeminiCommands) {
