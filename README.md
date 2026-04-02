@@ -18,19 +18,31 @@ Gemini runs as a **native MCP tool**, not a bash script. Claude calls it directl
 
 ## Installation
 
-### One command
+### One-liner (no clone needed)
 
+**macOS / Linux:**
 ```bash
-claude mcp add --scope user gemini-mcp-connect \ -e GEMINI_API_KEY=your_key_here \ -- uvx gemini-mcp-connect
+curl -fsSL https://raw.githubusercontent.com/StealthyLabsHQ/gemini-mcp-connect/main/install.sh | bash
 ```
 
-Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/StealthyLabsHQ/gemini-mcp-connect/main/install.ps1 | iex
+```
 
-Restart Claude Code — the tools are immediately available.
+Both scripts will prompt for your Gemini API key. Get a free key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
 
 ---
 
-### Alternative: install scripts
+### MCP only (no slash commands)
+
+```bash
+claude mcp add --scope user gemini-mcp-connect -e GEMINI_API_KEY=your_key_here -- uvx gemini-mcp-connect
+```
+
+---
+
+### From clone
 
 **macOS / Linux:**
 ```bash
@@ -127,6 +139,7 @@ gemini-mcp-connect/
 ├── .claude-plugin/
 │   └── plugin.json          # Plugin metadata
 ├── commands/                # /gemini, /gemini-status slash commands
+│   └── gemini/              # /gemini:lite, :flash, :pro, :status, :review, :validate
 ├── skills/                  # /review-code, /validate-plan
 ├── agents/                  # gemini-reviewer agent definition
 ├── hooks/                   # Pre-edit review hook (optional)
