@@ -6,7 +6,7 @@ Install (Claude Code, user-scoped):
     claude mcp add --scope user gemini-bridge -- python /full/path/to/gemini_bridge_mcp.py
 
 Requires:
-    pip install mcp google-genai python-dotenv
+    pip install "mcp>=1.27.0" "google-genai>=1.70.0" python-dotenv
     GEMINI_API_KEY in .env (same directory as this file)
 """
 

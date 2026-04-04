@@ -22,7 +22,7 @@ Settings applied (pro & flash):
     max_output_tokens = 65536
 
 Requires:
-    pip install google-genai python-dotenv
+    pip install "google-genai>=1.70.0" python-dotenv
     GEMINI_API_KEY in .env or environment variable
 """
 
